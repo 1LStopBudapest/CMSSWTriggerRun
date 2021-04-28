@@ -27,8 +27,19 @@ tar -zcvf CMSSW_10_2_22.tar.gz CMSSW_10_2_22
 mv CMSSW_10_2_22.tar.gz CMSSW_10_2_22/src/CMSSWTriggerRun/condor/
 cd CMSSWTriggerRun/condor/
 ```
+Set up proxy
 
-Submit condor jobs
 ```
-python condorScript.py
+voms-proxy-init --voms cms
+```
+It will create a proxy file in /tmp directory with format something like this x5..
+
+please copy that file in your home directory
+```
+cp /tmp/ProxyFile ~/
+```
+
+Now Submit condor jobs
+```
+python condorScript.py --prxy ProxyFile
 ```
