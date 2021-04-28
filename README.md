@@ -5,8 +5,8 @@ Log in to your lxplus account
 Set up CMSSW area
 
 ```
-cmsrel CMSSW_10_2_13
-cd CMSSW_10_2_13/src
+cmsrel CMSSW_10_2_22
+cd CMSSW_10_2_22/src
 cmsenv
 ```
 Checkout scipt from github
