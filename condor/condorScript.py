@@ -14,6 +14,7 @@ def get_parser():
     argParser.add_argument('--channel',          action='store',                     type=str,            default='SingleElectron',                                   help="Which dataset?" )
     argParser.add_argument('--filesperjob',      action='store',                     type=int,            default=1,                                               help="No of files to run. per condor job" )
     argParser.add_argument('--prxy',             action='store',                     type=str,            default='x509up_u43881',                                help="grid proxy file" )
+    argParser.add_argument('--prxyPath',         action='store',                     type=str,            default='/afs/cern.ch/user/k/kmandal/',                  help="grid proxy file" )
     
     return argParser
 
@@ -23,6 +24,7 @@ channel = options.channel
 fpj = options.filesperjob
 year = options.year
 proxy = options.prxy
+ppath = options.prxyPath
 
 flist = 'File'+sample+'.txt'
 if not os.path.islink(flist):
@@ -80,7 +82,7 @@ subline.append('when_to_transfer_output = ON_EXIT\n')
 subline.append('transfer_output_files   = %s_$(ProcId).root\n'%outputf)
 subline.append('\n\n')
 subline.append('Proxy_filename = %s\n'%proxy)
-subline.append('Proxy_path = /afs/cern.ch/user/k/kmandal/$(Proxy_filename)\n')
+subline.append('Proxy_path = %s$(Proxy_filename)\n'%ppath)
 subline.append('Transfer_Input_Files    = $(Proxy_path), TriggerCondor.sh, CMSSW_10_2_22.tar.gz\n')
 subline.append('arguments               = $(Proxy_path) $(ClusterId) $(ProcId)\n')
 subline.append('queue %i\n'%cq)
@@ -88,5 +90,5 @@ subline.append('queue %i\n'%cq)
 fs = open("TriggerCondor.sub", "w")
 fs.write(''.join(subline))
 fs.close()
-#os.system('condor_submit TriggerCondor.sub')
+os.system('condor_submit TriggerCondor.sub')
 
