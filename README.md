@@ -41,5 +41,5 @@ cp /tmp/ProxyFile ~/
 
 Now Submit condor jobs
 ```
-python condorScript.py --prxy ProxyFile
+python condorScript.py --prxy ProxyFile --prxyPath Path-to-proxyfile
 ```
