@@ -7,6 +7,8 @@ from TriggerList import *
 
 from SampleChain import SampleChain
 from FileList_2016 import samples as samples_2016
+from FileList_2017 import samples as samples_2017
+from FileList_2018 import samples as samples_2018
 sys.path.append('../')
 from Helper.HistInfo import HistInfo
 
@@ -69,7 +71,7 @@ if isinstance(samplelist[samples], types.ListType):
             histos[numTrigHist[key]+'_den'] = HistInfo(hname = numTrigHist[key]+'_den', sample = histext, binning=[100,0,500], histclass = ROOT.TH1F).make_hist()
             histos[numTrigHist[key]+'_num'] = HistInfo(hname = numTrigHist[key]+'_num', sample = histext, binning=[100,0,500], histclass = ROOT.TH1F).make_hist()
         
-        ch = SampleChain(sample, options.startfile, options.nfiles).getchain()
+        ch = SampleChain(sample, options.startfile, options.nfiles, year).getchain()
         print 'Total events of selected files of the', sample, 'sample: ', ch.GetEntries()
         n_entries = ch.GetEntries()
         nevtcut = n_entries -1 if nEvents == - 1 else nEvents - 1
@@ -105,7 +107,7 @@ else:
         histos[numTrigHist[key]+'_den'] = HistInfo(hname = numTrigHist[key]+'_den', sample = histext, binning=[100,0,500], histclass = ROOT.TH1F).make_hist()
         histos[numTrigHist[key]+'_num'] = HistInfo(hname = numTrigHist[key]+'_num', sample = histext, binning=[100,0,500], histclass = ROOT.TH1F).make_hist()
     
-    ch = SampleChain(sample, options.startfile, options.nfiles).getchain()
+    ch = SampleChain(sample, options.startfile, options.nfiles, year).getchain()
     print 'Total events of selected files of the', sample, 'sample: ', ch.GetEntries()
     n_entries = ch.GetEntries()
     nevtcut = n_entries -1 if nEvents == - 1 else nEvents - 1

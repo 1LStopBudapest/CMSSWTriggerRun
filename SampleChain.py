@@ -3,6 +3,8 @@ import ROOT
 import types
 
 import FileList_2016
+import FileList_2017
+import FileList_2018
 
 class SampleChain():
     luminosity_2016           = 35922.0
