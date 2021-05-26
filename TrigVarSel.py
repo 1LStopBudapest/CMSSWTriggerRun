@@ -16,14 +16,17 @@ class TrigVarSel():
     def TrigExist(self, tr, trig):
        return True if trig in [br.GetName() for br in tr.GetListOfBranches()] else False
     
-    def passEleTrig(self, trig):
-        if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
+    def passEleTrig(self, trig, year):
+        if year==2016:
+            if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
+        else:
+            if trig=='HLT_Ele32_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele32_WPTight_Gsf'): return self.tr.HLT_Ele32_WPTight_Gsf
 
     def passMuTrig(self, trig):
         if trig=='HLT_IsoMu27' and hasattr(self.tr, 'HLT_IsoMu27'): return self.tr.HLT_IsoMu27
 
-    def passLepTrig(self, trig, opt):
-        return self.passEleTrig(trig) if opt=='Ele' else self.passMuTrig(trig)
+    def passLepTrig(self, trig, opt, year):
+        return self.passEleTrig(trig, year) if opt=='Ele' else self.passMuTrig(trig)
     
     def passMETTrig(self, trig):
         if trig=='HLT_PFMET90_PFMHT90_IDTight' and hasattr(self.tr, 'HLT_PFMET90_PFMHT90_IDTight'): return self.tr.HLT_PFMET90_PFMHT90_IDTight
@@ -76,14 +79,14 @@ class TrigVarSel():
         ele = self.getEleVar(self.selectEleIdx(eid))
         return ele[0]['pt'] > thr if len(ele) else False
         
-    def Mucut(self, thr=30, IdOpt='tight'):
+    def Mucut(self,  thr=30, IdOpt='tight'):
         Mu = self.getMuVar(self.selectMuIdx(IdOpt))
         return Mu[0]['pt'] > thr if len(Mu) else False
 
-    def Lepcut(self, lep):
-        return self.Elecut() if 'Ele' in lep else self.Mucut()
+    def Lepcut(self, lep, thr=30):
+        return self.Elecut(thr) if 'Ele' in lep else self.Mucut()
     
-    def XtraLepVeto(self, lep, thr=10, IdOpt='loose'):
+    def XtraLepVeto(self, lep, thr=0, IdOpt='loose'):
         cut = True
         eid = self.EleIDconv(IdOpt)
         if 'Ele' in lep:
@@ -94,7 +97,7 @@ class TrigVarSel():
             if len(lepvar) and lepvar[0]['pt']>thr:
                 cut = False
         if 'Mu' in lep:
-            lid = getMuVar(selectMuIdx('tight'))[0]['idx'] # assuming this func applied after Mucut
+            lid = self.getMuVar(self.selectMuIdx('tight'))[0]['idx'] # assuming this func applied after Mucut
             muidx = self.selectVetoMuIdx(IdOpt)
             muidx.remove(lid)
             lepvar = self.getLepVar(muidx, self.selectVetoEleIdx(eid))
