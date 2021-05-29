@@ -2,6 +2,8 @@ import os, sys
 
 sys.path.append('../')
 from FileList_2016 import samples as samples_2016
+from FileList_2017 import samples as samples_2017
+from FileList_2018 import samples as samples_2018
 from SampleChain import SampleChain
 
 def get_parser():
@@ -9,12 +11,13 @@ def get_parser():
     '''
     import argparse
     argParser = argparse.ArgumentParser(description = "Argument parser")
-    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Run2016B',                                help="Which sample?" )
-    argParser.add_argument('--year',             action='store',                     type=int,            default=2016,                                             help="Which year?" )
+    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Data2017',                                help="Which sample?" )
+    argParser.add_argument('--year',             action='store',                     type=int,            default=2017,                                             help="Which year?" )
     argParser.add_argument('--channel',          action='store',                     type=str,            default='SingleElectron',                                   help="Which dataset?" )
     argParser.add_argument('--filesperjob',      action='store',                     type=int,            default=1,                                               help="No of files to run. per condor job" )
     argParser.add_argument('--prxy',             action='store',                     type=str,            default='x509up_u43881',                                help="grid proxy file" )
     argParser.add_argument('--prxyPath',         action='store',                     type=str,            default='/afs/cern.ch/user/k/kmandal/',                  help="grid proxy file" )
+
     
     return argParser
 
@@ -26,11 +29,31 @@ year = options.year
 proxy = options.prxy
 ppath = options.prxyPath
 
+if year==2016:
+    samplelist = samples_2016
+    DataLumi = SampleChain.luminosity_2016
+elif year==2017:
+    samplelist = samples_2017
+    DataLumi = SampleChain.luminosity_2017
+else:
+    samplelist = samples_2018
+    DataLumi = SampleChain.luminosity_2018
+
+#if sample=='SingleElectron_Data' :
+#    tfiles=0
+#    for s in samplelist[sample]:
+#        flist = s
+#        if not os.path.islink(flist):
+#             os.system('ln -s ../%s %s'%(flist, flist))
+#        tfiles = tfiles + len(SampleChain.getfilelist(s))
+#    cq = (tfiles/fpj) + 1 if tfiles%fpj else tfiles/fpj
+
+#else:
 flist = 'File'+sample+'.txt'
 if not os.path.islink(flist):
     os.system('ln -s ../%s %s'%(flist, flist))
 
-tfiles = len(SampleChain.getfilelist(samples_2016[sample]))
+tfiles = len(SampleChain.getfilelist(samplelist[sample]))
 cq = (tfiles/fpj) + 1 if tfiles%fpj else tfiles/fpj
 
 print 'sample: ', sample
@@ -58,11 +81,12 @@ bashline.append("job=$3\n")
 bashline.append("startfile=$((job*%i))\n"%fpj)
 bashline.append("\n")
 bashline.append("cd CMSSWTriggerRun\n")
-bashline.append("python TrigHistMaker.py --sample %s --channel %s --startfile $startfile --nfiles %i --jtype condor\n"%(sample, channel, fpj))
-bashline.append("\n")
-bashline.append("mv *.root ../../../")
-bashline.append("\n")
-bashline.append("cd ../../../")
+bashline.append("python TrigHistMaker.py --sample %s --year %s --channel %s --startfile $startfile --nfiles %i --jtype condor\n"%(sample, year, channel, fpj))
+bashline.append("\necho 'Run completed'\n")
+bashline.append("cp *.root /eos/user/k/kmandal/TrigDataSamp/")
+bashline.append("\necho 'root file copying compeleted'\n")
+bashline.append("cd ../../../\n")
+bashline.append("\nrm -rf CMSSW_10_2_22 CMSSW_10_2_22.tar.gz")
 fsh = open("TriggerCondor.sh", "w")
 fsh.write(''.join(bashline))
 fsh.close()
@@ -79,7 +103,7 @@ subline.append('log                     = TriggerCondor.$(ClusterId).$(ProcId).l
 subline.append('getenv                  = True\n')
 subline.append('should_transfer_files   = YES\n')
 subline.append('when_to_transfer_output = ON_EXIT\n')
-subline.append('transfer_output_files   = %s_$(ProcId).root\n'%outputf)
+subline.append('transfer_output_files   = ""')
 subline.append('\n\n')
 subline.append('Proxy_filename = %s\n'%proxy)
 subline.append('Proxy_path = %s$(Proxy_filename)\n'%ppath)
@@ -90,5 +114,6 @@ subline.append('queue %i\n'%cq)
 fs = open("TriggerCondor.sub", "w")
 fs.write(''.join(subline))
 fs.close()
-os.system('condor_submit TriggerCondor.sub')
+#os.system('condor_submit TriggerCondor.sub')
+
 
