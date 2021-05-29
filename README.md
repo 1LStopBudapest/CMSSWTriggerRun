@@ -25,7 +25,7 @@ Make CMSSW tar file
 cd ../..
 tar -zcvf CMSSW_10_2_22.tar.gz CMSSW_10_2_22
 mv CMSSW_10_2_22.tar.gz CMSSW_10_2_22/src/CMSSWTriggerRun/condor/
-cd CMSSWTriggerRun/condor/
+cd CMSSW_10_2_22/src/CMSSWTriggerRun/condor/
 ```
 Set up proxy
 

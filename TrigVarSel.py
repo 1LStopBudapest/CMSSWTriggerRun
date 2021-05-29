@@ -18,6 +18,7 @@ class TrigVarSel():
     
     def passEleTrig(self, trig):
         if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
+        if trig=='HLT_Ele35_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele35_WPTight_Gsf'): return self.tr.HLT_Ele35_WPTight_Gsf
 
     def passMuTrig(self, trig):
         if trig=='HLT_IsoMu27' and hasattr(self.tr, 'HLT_IsoMu27'): return self.tr.HLT_IsoMu27
@@ -80,8 +81,8 @@ class TrigVarSel():
         Mu = self.getMuVar(self.selectMuIdx(IdOpt))
         return Mu[0]['pt'] > thr if len(Mu) else False
 
-    def Lepcut(self, lep):
-        return self.Elecut() if 'Ele' in lep else self.Mucut()
+    def Lepcut(self, lep, thr):
+        return self.Elecut(thr) if 'Ele' in lep else self.Mucut(thr)
     
     def XtraLepVeto(self, lep, thr=10, IdOpt='loose'):
         cut = True

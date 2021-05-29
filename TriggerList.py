@@ -21,7 +21,9 @@ MET120Triggers = [
     'HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
     ]
 
-SingleEleTrigger = 'HLT_Ele27_eta2p1_WPTight_Gsf'
+SingleEleTrigger_2016 = 'HLT_Ele27_eta2p1_WPTight_Gsf'
+SingleEleTrigger_2017 = 'HLT_Ele35_WPTight_Gsf'
+SingleEleTrigger_2018 = 'HLT_Ele35_WPTight_Gsf'
 
 SingleMuTrigger = 'HLT_IsoMu27'
 
