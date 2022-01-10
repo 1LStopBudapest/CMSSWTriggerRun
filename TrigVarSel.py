@@ -20,7 +20,7 @@ class TrigVarSel():
         if year==2016:
             if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
         else:
-            if trig=='HLT_Ele32_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele32_WPTight_Gsf'): return self.tr.HLT_Ele32_WPTight_Gsf
+            if trig=='HLT_Ele35_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele35_WPTight_Gsf'): return self.tr.HLT_Ele35_WPTight_Gsf
 
     def passMuTrig(self, trig):
         if trig=='HLT_IsoMu27' and hasattr(self.tr, 'HLT_IsoMu27'): return self.tr.HLT_IsoMu27
@@ -83,7 +83,7 @@ class TrigVarSel():
         Mu = self.getMuVar(self.selectMuIdx(IdOpt))
         return Mu[0]['pt'] > thr if len(Mu) else False
 
-    def Lepcut(self, lep, thr=30):
+    def Lepcut(self, lep, thr):
         return self.Elecut(thr) if 'Ele' in lep else self.Mucut()
     
     def XtraLepVeto(self, lep, thr=0, IdOpt='loose'):

@@ -45,13 +45,18 @@ DataLumi=1.0
 if year==2016:
     samplelist = samples_2016
     DataLumi = SampleChain.luminosity_2016
+    SingleEleTrigger = SingleEleTrigger_2016
+    pTthr = 30
 elif year==2017:
     samplelist = samples_2017
     DataLumi = SampleChain.luminosity_2017
+    SingleEleTrigger = SingleEleTrigger_2017
+    pTthr = 40
 else:
     samplelist = samples_2018
     DataLumi = SampleChain.luminosity_2018
-
+    SingleEleTrigger = SingleEleTrigger_2018
+    pTthr = 40
     
 denTrig = SingleEleTrigger if 'Electron' in channel else SingleMuTrigger
 lepOpt = 'Ele' if 'Electron' in channel else 'Mu'
@@ -210,9 +215,9 @@ else:
         presel = getTrig.ISRcut(100) and getTrig.HTcut(200)
         #Single lep Selection
         if year== 2016: 
-            lepsel = getTrig.Lepcut(lepOpt, 30) and getTrig.XtraLepVeto(lepOpt)
+            lepsel = getTrig.Lepcut(lepOpt, pTthr) and getTrig.XtraLepVeto(lepOpt)
         else: 
-            lepsel = getTrig.Lepcut(lepOpt, 35) and getTrig.XtraLepVeto(lepOpt)
+            lepsel = getTrig.Lepcut(lepOpt, pTthr) and getTrig.XtraLepVeto(lepOpt)
         filtrsel = getTrig.passfilters()
         if presel and lepsel and filtrsel:
             for trig, hist in numTrigHist.items():
