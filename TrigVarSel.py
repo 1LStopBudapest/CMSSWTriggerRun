@@ -95,7 +95,7 @@ class TrigVarSel():
             if len(lepvar) and lepvar[0]['pt']>thr:
                 cut = False
         if 'Mu' in lep:
-            lid = getMuVar(selectMuIdx('tight'))[0]['idx'] # assuming this func applied after Mucut
+            lid = self.getMuVar(self.selectMuIdx('tight'))[0]['idx'] # assuming this func applied after Mucut
             muidx = self.selectVetoMuIdx(IdOpt)
             muidx.remove(lid)
             lepvar = self.getLepVar(muidx, self.selectVetoEleIdx(eid))
@@ -106,7 +106,7 @@ class TrigVarSel():
     def selectEleIdx(self, IdOpt):
         idx = []
         for i in range(len(self.tr.Electron_pt)):
-            if self.eleSelector(pt=self.tr.Electron_pt[i], eta=self.tr.Electron_eta[i], deltaEtaSC=self.tr.Electron_deltaEtaSC[i], iso=self.tr.Electron_pfRelIso03_all[i], dxy=self.tr.Electron_dxy[i], dz=self.tr.Electron_dz[i], Id=self.tr.Electron_cutBased_Fall17_V1[i], idopt=IdOpt):
+            if self.eleSelector(pt=self.tr.Electron_pt[i], eta=self.tr.Electron_eta[i], deltaEtaSC=self.tr.Electron_deltaEtaSC[i], iso=self.tr.Electron_pfRelIso03_all[i], dxy=self.tr.Electron_dxy[i], dz=self.tr.Electron_dz[i], Id=self.tr.Electron_cutBased[i], idopt=IdOpt): #Electron_cutBased_Fall17_V1 decpricated in v9
                 idx.append(i)
         return idx
     
@@ -120,7 +120,7 @@ class TrigVarSel():
     def selectVetoEleIdx(self, IdOpt):
         idx = []
         for i in range(len(self.tr.Electron_pt)):
-            if self.tr.Electron_pt[i] > 5.0 and abs(self.tr.Electron_eta[i]) < 2.5 and (abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) < 1.4442 or abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) > 1.566 ) and self.eleID(self.tr.Electron_cutBased_Fall17_V1[i], IdOpt):
+            if self.tr.Electron_pt[i] > 5.0 and abs(self.tr.Electron_eta[i]) < 2.5 and (abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) < 1.4442 or abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) > 1.566 ) and self.eleID(self.tr.Electron_cutBased[i], IdOpt):
                 idx.append(i)
         return idx
 
