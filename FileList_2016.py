@@ -18,5 +18,5 @@ samples['SingleMuon_Run2016E'] = 'FileSingleMuon_Run2016E.txt'
 samples['SingleMuon_Run2016F'] = 'FileSingleMuon_Run2016F.txt'
 samples['SingleMuon_Run2016G'] = 'FileSingleMuon_Run2016G.txt'
 samples['SingleMuon_Run2016H'] = 'FileSingleMuon_Run2016H.txt'
-samples['SingleMuon_Data'] =  'FileSingleMuon_Data2016.txt'
+samples['SingleMuon_Data2016'] =  'FileSingleMuon_Data2016.txt'
 samples['SingleMuon_Data'] =  [samples['SingleMuon_Run2016B'], samples['SingleMuon_Run2016C'], samples['SingleMuon_Run2016D'], samples['SingleMuon_Run2016E'], samples['SingleMuon_Run2016F'], samples['SingleMuon_Run2016G'], samples['SingleMuon_Run2016H']]

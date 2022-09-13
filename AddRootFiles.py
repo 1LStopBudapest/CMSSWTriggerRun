@@ -11,23 +11,17 @@ def get_parser():
     '''
     import argparse
     argParser = argparse.ArgumentParser(description = "Argument parser")
-    argParser.add_argument('--sample',           action='store',                    type=str,            default='SingleElectron_Data',                    help="Which sample?" )
-    argParser.add_argument('--trigger',          action='store',                    type=str,            default='AltMETTriggers',                         help="Which triggers?")
-    argParser.add_argument('--folder',           action='store',                    type=str,            default='SE2016F_rootfiles',                      help="Which folder contains the root files?")
+    argParser.add_argument('--sample',           action='store',                    type=str,            default='SingleElectron_Data2018',                    help="Which sample?" )
+    argParser.add_argument('--folder',           action='store',                    type=str,            default='2018Data',                      help="Which folder contains the root files?")
     return argParser
 
 options = get_parser().parse_args()
 
 sample = options.sample
-trigger = options.trigger
+#trigger = options.trigger
 folder = options.folder
 
-if trigger == 'METTriggers':
-    tr=METTriggers
-else:
-    tr=AltMETTriggers
-
-numTrigHist = dict((key, 'hMET_'+key) for key in tr)
+numTrigHist = dict((key, 'hMET_'+key) for key in MET120Triggers)
 
 histext = sample
 hfile = ROOT.TFile( 'TrigHist_'+sample+'.root', 'RECREATE')
@@ -41,7 +35,7 @@ for key in numTrigHist:
     histos[numTrigHist[key]+'_Muon_pt_num'] = HistInfo(hname = numTrigHist[key]+'_Muon_pt_num', sample = histext, binning=[0,20,40,60,80,100,150,200,250], histclass = ROOT.TH1F, binopt='').make_hist()
     histos[numTrigHist[key]+'_Electron_pt_den'] = HistInfo(hname = numTrigHist[key]+'_Electron_pt_den', sample = histext, binning=[0,20,40,60,80,100,150,200,250], histclass = ROOT.TH1F, binopt='').make_hist()
     histos[numTrigHist[key]+'_Electron_pt_num'] = HistInfo(hname = numTrigHist[key]+'_Electron_pt_num', sample = histext, binning=[0,20,40,60,80,100,150,200,250], histclass = ROOT.TH1F, binopt='').make_hist()
-    if trigger == 'AltMETTriggers':
+    if 'NoMu' in key:
         histos[numTrigHist[key]+'_AltMET_pt_den'] = HistInfo(hname = numTrigHist[key]+'_AltMET_pt_den', sample = histext, binning=[0,50,80,100,120,140,160,180,200,220,240,260,300,350,400,500], histclass = ROOT.TH1F, binopt='').make_hist()
         histos[numTrigHist[key]+'_AltMET_pt_num'] = HistInfo(hname = numTrigHist[key]+'_AltMET_pt_num', sample = histext, binning=[0,50,80,100,120,140,160,180,200,220,240,260,300,350,400,500], histclass = ROOT.TH1F, binopt='').make_hist()
         histos[numTrigHist[key]+'_deltaMET_pt_den'] = HistInfo(hname = numTrigHist[key]+'_deltaMET_pt_den', sample = histext, binning=[0,20,40,60,80,100,120,140,160,200,300,400,500], histclass = ROOT.TH1F, binopt='').make_hist()
@@ -57,7 +51,7 @@ for key in numTrigHist:
         histos[numTrigHist[key]+'_deltaMET_pt_Muon_pt_den'] = HistInfo(hname = numTrigHist[key]+'_deltaMET_pt_Muon_pt_den', sample = histext, binning=[[12,0,500],[8,0,250]], histclass = ROOT.TH2F, binopt='').make_hist()
         histos[numTrigHist[key]+'_deltaMET_pt_Muon_pt_num'] = HistInfo(hname = numTrigHist[key]+'_deltaMET_pt_Muon_pt_num', sample = histext, binning=[[12,0,500],[8,0,250]], histclass = ROOT.TH2F, binopt='').make_hist()
 
-posSamples=["SingleElectron_Run2016B", "SingleElectron_Run2016C", "SingleElectron_Run2016D", "SingleElectron_Run2016E", "SingleElectron_Run2016F", "SingleElectron_Run2016G", "SingleElectron_Run2016H", "SingleElectron_Data"]
+posSamples=["SingleElectron_Run2016B", "SingleElectron_Run2016C", "SingleElectron_Run2016D", "SingleElectron_Run2016E", "SingleElectron_Run2016F", "SingleElectron_Run2016G", "SingleElectron_Run2016H", "SingleElectron_Data2016", "SingleMuon_Data2016", 'SingleElectron_Run2018A', 'SingleElectron_Run2018B', 'SingleElectron_Run2018C', 'SingleElectron_Run2018D']
 files=[f for f in listdir(os.getcwd()+"/"+folder)]
 for i in range(len(files)):
     savedfile=ROOT.TFile.Open(os.getcwd()+"/"+folder+"/"+files[i])
@@ -65,5 +59,7 @@ for i in range(len(files)):
         for s in posSamples:
             if savedfile.Get(key+'_'+s):
                 histos[key].Add(savedfile.Get(key+'_'+s))
+                
+
         
 hfile.Write()        

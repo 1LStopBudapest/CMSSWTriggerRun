@@ -16,17 +16,16 @@ class TrigVarSel():
     def TrigExist(self, tr, trig):
        return True if trig in [br.GetName() for br in tr.GetListOfBranches()] else False
     
-    def passEleTrig(self, trig, year):
-        if year==2016:
-            if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
-        else:
-            if trig=='HLT_Ele32_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele32_WPTight_Gsf'): return self.tr.HLT_Ele32_WPTight_Gsf
+    def passEleTrig(self, trig):
+        if trig=='HLT_Ele27_eta2p1_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele27_eta2p1_WPTight_Gsf'): return self.tr.HLT_Ele27_eta2p1_WPTight_Gsf
+        if trig=='HLT_Ele32_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele32_WPTight_Gsf'): return self.tr.HLT_Ele32_WPTight_Gsf
+        if trig=='HLT_Ele35_WPTight_Gsf' and hasattr(self.tr, 'HLT_Ele35_WPTight_Gsf'): return self.tr.HLT_Ele35_WPTight_Gsf
 
     def passMuTrig(self, trig):
         if trig=='HLT_IsoMu27' and hasattr(self.tr, 'HLT_IsoMu27'): return self.tr.HLT_IsoMu27
 
     def passLepTrig(self, trig, opt, year):
-        return self.passEleTrig(trig, year) if opt=='Ele' else self.passMuTrig(trig)
+        return self.passEleTrig(trig) if opt=='Ele' else self.passMuTrig(trig)
     
     def passMETTrig(self, trig):
         if trig=='HLT_PFMET90_PFMHT90_IDTight' and hasattr(self.tr, 'HLT_PFMET90_PFMHT90_IDTight'): return self.tr.HLT_PFMET90_PFMHT90_IDTight
@@ -83,8 +82,8 @@ class TrigVarSel():
         Mu = self.getMuVar(self.selectMuIdx(IdOpt))
         return Mu[0]['pt'] > thr if len(Mu) else False
 
-    def Lepcut(self, lep, thr=30):
-        return self.Elecut(thr) if 'Ele' in lep else self.Mucut()
+    def Lepcut(self, lep, thr):
+        return self.Elecut(thr) if 'Ele' in lep else self.Mucut(thr)
     
     def XtraLepVeto(self, lep, thr=0, IdOpt='loose'):
         cut = True
@@ -108,7 +107,7 @@ class TrigVarSel():
     def selectEleIdx(self, IdOpt):
         idx = []
         for i in range(len(self.tr.Electron_pt)):
-            if self.eleSelector(pt=self.tr.Electron_pt[i], eta=self.tr.Electron_eta[i], deltaEtaSC=self.tr.Electron_deltaEtaSC[i], iso=self.tr.Electron_pfRelIso03_all[i], dxy=self.tr.Electron_dxy[i], dz=self.tr.Electron_dz[i], Id=self.tr.Electron_cutBased_Fall17_V1[i], idopt=IdOpt):
+            if self.eleSelector(pt=self.tr.Electron_pt[i], eta=self.tr.Electron_eta[i], deltaEtaSC=self.tr.Electron_deltaEtaSC[i], iso=self.tr.Electron_pfRelIso03_all[i], dxy=self.tr.Electron_dxy[i], dz=self.tr.Electron_dz[i], Id=self.tr.Electron_cutBased[i], idopt=IdOpt): #Electron_cutBased_Fall17_V1 decpricated in v9
                 idx.append(i)
         return idx
     
@@ -122,7 +121,7 @@ class TrigVarSel():
     def selectVetoEleIdx(self, IdOpt):
         idx = []
         for i in range(len(self.tr.Electron_pt)):
-            if self.tr.Electron_pt[i] > 5.0 and abs(self.tr.Electron_eta[i]) < 2.5 and (abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) < 1.4442 or abs(self.tr.Electron_eta[i] + self.tr.Electron_deltaEtaSC[i]) > 1.566 ) and self.eleID(self.tr.Electron_cutBased_Fall17_V1[i], IdOpt):
+            if self.eleSelector(pt=self.tr.Electron_pt[i], eta=self.tr.Electron_eta[i], deltaEtaSC=self.tr.Electron_deltaEtaSC[i], iso=self.tr.Electron_pfRelIso03_all[i], dxy=self.tr.Electron_dxy[i], dz=self.tr.Electron_dz[i], Id=self.tr.Electron_cutBased[i], idopt=IdOpt): #Electron_cutBased_Fall17_V1 decpricated in v9
                 idx.append(i)
         return idx
 
@@ -206,3 +205,8 @@ class TrigVarSel():
         for jetpt in od:
             idx.append(od[jetpt])
         return idx
+        
+    def leadingJet(self, thr=20):
+        idx = self.selectjetIdx(thr)[0]
+        return self.tr.Jet_pt[idx]
+         
