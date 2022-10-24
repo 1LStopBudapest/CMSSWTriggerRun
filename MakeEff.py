@@ -31,8 +31,8 @@ else:
 
 
 
-hnum = hfile.Get('hMET_HLT_PFMET120_PFMHT120_IDTight_num_'+sample)
-hden = hfile.Get('hMET_HLT_PFMET120_PFMHT120_IDTight_den_'+sample)
+hnum = hfile.Get('hMET_HLT_PFMET_PFMHT120_IDTight_num_'+sample)
+hden = hfile.Get('hMET_HLT_PFMET_PFMHT120_IDTight_den_'+sample)
 heff = ROOT.TGraphAsymmErrors()
 heff.BayesDivide(hnum, hden)
 c = ROOT.TCanvas('c', '', 600, 800)

@@ -2,6 +2,8 @@ import os, sys
 
 sys.path.append('../')
 from FileList_2016 import samples as samples_2016
+from FileList_2017 import samples as samples_2017
+from FileList_2018 import samples as samples_2018
 from SampleChain import SampleChain
 
 def get_parser():
@@ -9,8 +11,8 @@ def get_parser():
     '''
     import argparse
     argParser = argparse.ArgumentParser(description = "Argument parser")
-    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Run2016B',                                help="Which sample?" )
-    argParser.add_argument('--year',             action='store',                     type=int,            default=2016,                                             help="Which year?" )
+    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Run2018D',                                help="Which sample?" )
+    argParser.add_argument('--year',             action='store',                     type=int,            default=2018,                                             help="Which year?" )
     argParser.add_argument('--channel',          action='store',                     type=str,            default='SingleElectron',                                   help="Which dataset?" )
     argParser.add_argument('--filesperjob',      action='store',                     type=int,            default=1,                                               help="No of files to run. per condor job" )
     argParser.add_argument('--prxy',             action='store',                     type=str,            default='x509up_u43881',                                help="grid proxy file" )
@@ -26,11 +28,18 @@ year = options.year
 proxy = options.prxy
 ppath = options.prxyPath
 
+if year==2016:
+    samples = samples_2016
+elif year==2017:
+    samples = samples_2017
+else:
+    samples = samples_2018
+
 flist = 'File'+sample+'.txt'
 if not os.path.islink(flist):
     os.system('ln -s ../%s %s'%(flist, flist))
 
-tfiles = len(SampleChain.getfilelist(samples_2016[sample]))
+tfiles = len(SampleChain.getfilelist(samples[sample]))
 cq = (tfiles/fpj) + 1 if tfiles%fpj else tfiles/fpj
 
 print 'sample: ', sample

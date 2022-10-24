@@ -19,8 +19,8 @@ def get_parser():
     '''
     import argparse
     argParser = argparse.ArgumentParser(description = "Argument parser")
-    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Run2016B',                                help="Which sample?" )
-    argParser.add_argument('--year',             action='store',                     type=int,            default=2016,                                             help="Which year?" )
+    argParser.add_argument('--sample',           action='store',                     type=str,            default='SingleElectron_Run2018A',                                help="Which sample?" )
+    argParser.add_argument('--year',             action='store',                     type=int,            default=2018,                                             help="Which year?" )
     argParser.add_argument('--channel',             action='store',                  type=str,            default='SingleElectron',                                   help="Which dataset?" )
     argParser.add_argument('--startfile',        action='store',                     type=int,            default=0,                                                help="start from which root file like 0th or 10th etc?" )
     argParser.add_argument('--nfiles',           action='store',                     type=int,            default=-1,                                               help="No of files to run. -1 means all files" )
